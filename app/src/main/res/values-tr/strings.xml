@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="enter_city_name">Şehir adını girin...</string>
+    <string name="humidity">Nem</string>
+    <string name="wind">Rüzgar</string>
+    <string name="weekly_forecast">HAFTALIK TAHMİN</string>
+    <string name="city_name">Şehir ismi</string>
+    <string name="set">Ayarla</string>
+    <string name="the_city_cannot_be_left_empty">Şehir boş bırakılamaz!</string>
+</resources>

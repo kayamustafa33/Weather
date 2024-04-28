@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Weather</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="enter_city_name">Enter city name...</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="weekly_forecast">WEEKLY FORECAST</string>
+    <string name="city_name">City name</string>
+    <string name="set">Set</string>
+    <string name="the_city_cannot_be_left_empty">The city cannot be left empty!</string>
+</resources>
