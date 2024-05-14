@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/weatherFragment"
+        android:title="@string/weather"
+        android:icon="@drawable/baseline_home_24"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/favoriteFragment"
+        android:title="@string/favorites"
+        android:icon="@drawable/baseline_bookmark_border_24"
+        app:showAsAction="never"/>
+
+</menu>

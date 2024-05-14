@@ -10,4 +10,9 @@
         android:name="com.kotlin.weather.view.mainView.WeatherFragment"
         android:label="fragment_weather"
         tools:layout="@layout/fragment_weather" />
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.kotlin.weather.view.mainView.FavoriteFragment"
+        android:label="fragment_favorite"
+        tools:layout="@layout/fragment_favorite" />
 </navigation>

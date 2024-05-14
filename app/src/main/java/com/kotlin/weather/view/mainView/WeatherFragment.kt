@@ -15,15 +15,18 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kotlin.weather.R
 import com.kotlin.weather.adapter.DayForecastAdapter
 import com.kotlin.weather.adapter.WeeklyForecastAdapter
 import com.kotlin.weather.databinding.FragmentWeatherBinding
+import com.kotlin.weather.model.Favorite
 import com.kotlin.weather.model.Forecast
 import com.kotlin.weather.model.Forecastday
 import com.kotlin.weather.util.SharedPreferencesUtils
+import com.kotlin.weather.viewModel.FavoriteViewModel
 import com.kotlin.weather.viewModel.WeatherViewModel
 
 class WeatherFragment : Fragment() {
@@ -38,10 +41,17 @@ class WeatherFragment : Fragment() {
     private lateinit var location : String
     private lateinit var cityEditText : EditText
     private lateinit var setLocationButton : Button
+    private lateinit var favoriteList : ArrayList<Favorite>
+
+    private val favoriteViewModel: FavoriteViewModel by activityViewModels {
+        ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         //Data binding ile layoutumuzu birleştirdik
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_weather, container, false)
+
+        favoriteList = ArrayList()
 
         //View modeli başlattık.
         weatherViewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
@@ -56,14 +66,66 @@ class WeatherFragment : Fragment() {
         //viewModelden veri almak için fonksiyonumuzu çağırdık
         weatherViewModel.getWeatherDataFromViewModel(binding.root.context, location, binding.weatherIconImageView, binding.layout)
 
-
         //Fonksiyonları çağırdık
         fetchData()
         changeCityIconClicked()
         bottomSheetInit()
         updateWeather()
+        observeFavoriteData()
+        favoriteIconClicked()
+        observeCurrentLocation()
 
         return binding.root
+    }
+
+    private fun favoriteIconClicked() {
+        binding.favoriteSaveIcon.setOnClickListener {
+            val isLocationFavorite = isLocationFavorite(location)
+            if (isLocationFavorite) {
+                // Konum favori olarak kaydedilmiş, silme işlemi yap
+                favoriteViewModel.deleteLocation(location) { success ->
+                    if (success) {
+                        binding.favoriteSaveIcon.setImageResource(R.drawable.save)
+                    }
+                }
+            } else {
+                // Konum favori olarak kaydedilmemiş, ekleme işlemi yap
+                favoriteViewModel.insertLocation(location) { success ->
+                    if (success) {
+                        binding.favoriteSaveIcon.setImageResource(R.drawable.saved)
+                    }
+                }
+            }
+        }
+    }
+
+    //favorilere eklenmiş mi kontrol ediyoruz
+    private fun isLocationFavorite(location: String): Boolean {
+        return favoriteViewModel.favoritesData.value?.any { it.location == location } ?: false
+    }
+
+    private fun observeFavoriteData() {
+        favoriteViewModel.favoritesData.observe(viewLifecycleOwner) { favoriteList ->
+            favoriteList?.let {
+                // Eğer konum listede ekliyse resmi değiştirir
+                if (isLocationFavorite(location)) {
+                    binding.favoriteSaveIcon.setImageResource(R.drawable.saved)
+                }
+            }
+        }
+    }
+
+    //Anlık olarak şehir değişince resmi de favorilerde olup olmadığını kontrol eder
+    private fun observeCurrentLocation() {
+        weatherViewModel.currentLocation.observe(viewLifecycleOwner) { currentLocation ->
+            if(currentLocation != null) {
+                if (isLocationFavorite(currentLocation)) {
+                    binding.favoriteSaveIcon.setImageResource(R.drawable.saved)
+                } else {
+                    binding.favoriteSaveIcon.setImageResource(R.drawable.save)
+                }
+            }
+        }
     }
 
     private fun fetchData() {

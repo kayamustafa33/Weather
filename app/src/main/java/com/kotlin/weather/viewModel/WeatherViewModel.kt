@@ -24,8 +24,11 @@ class WeatherViewModel : ViewModel(), WeatherImplementor {
 
     //Live data oluşturduk.
     val weatherData = MutableLiveData<WeatherForecastResponse?>()
+    val currentLocation = MutableLiveData<String>()
 
     override fun getWeatherDataFromViewModel(context: Context,location : String,weatherIcon : ImageView,layout: LinearLayout) {
+        currentLocation.value = location
+
         //Fonksiyon çağırılınca progress bar gösterir
         val customProgressDialog = CustomProgressDialog(context)
         customProgressDialog.show()
